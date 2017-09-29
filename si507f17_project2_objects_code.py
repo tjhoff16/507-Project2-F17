@@ -207,7 +207,10 @@ class Movie():
         self.itunes_id  = media_dict['trackId']
         self.rating = media_dict['contentAdvisoryRating']
         self.genre = media_dict['primaryGenreName']
-        self.time = media_dict['trackTimeMillis']
+        try:
+            self.time = media_dict['trackTimeMillis']
+        except :
+            self.time = 0
 
         try:
             self.description = media_dict['longDescription']
@@ -228,11 +231,15 @@ class Movie():
 # [PROBLEM 3] [150 POINTS]
 print("\n***** PROBLEM 3 *****\n")
 
-# In this problem, you'll write some code to use the definitions you've just written.
+# In this problem, you'll write some code to use the definitions you've
+# just written.
 
-# First, here we have provided some variables which hold data about media overall, songs, movies, and books.
+# First, here we have provided some variables which hold data about media
+# overall, songs, movies, and books.
 
-# NOTE: (The first time you run this file, data will be cached, so the data saved in each variable will be the same each time you run the file, as long as you do not delete your cached data.)
+# NOTE: (The first time you run this file, data will be cached,
+# so the data saved in each variable will be the same each time
+# you run the file, as long as you do not delete your cached data.)
 
 media_samples = sample_get_cache_itunes_data("love")["results"]
 
@@ -241,19 +248,45 @@ song_samples = sample_get_cache_itunes_data("love","music")["results"]
 movie_samples = sample_get_cache_itunes_data("love","movie")["results"]
 
 
-# You may want to do some investigation on these variables to make sure you understand correctly what type of value they hold, what's in each one!
+# You may want to do some investigation on these variables to make sure you
+# understand correctly what type of value they hold, what's in each one!
 
-# Use the values in these variables above, and the class definitions you've written, in order to create a list of each media type, including "media" generally.
+# Use the values in these variables above, and the class definitions you've
+# written, in order to create a list of each media type,
+# including "media" generally.
 
-# You should end up with: a list of Media objects saved in a variable media_list,
+# You should end up with: a list of Media objects saved
+# in a variable media_list,
 # a list of Song objects saved in a variable song_list,
 # a list of Movie objects saved in a variable movie_list,
 # and a list of Book objects saved in a variable book_list.
 
 # You may use any method of accumulation to make that happen.
 
+media_list = []
+song_list = []
+movie_list = []
+book_list = []
 
+for e in media_samples:
+    if e['kind'] == 'feature-movie':
+        movie_add = Movie(e)
+        media_list.append(movie_add)
+    elif e['kind'] == 'song':
+        song_add = Song(e)
+        media_list.append(song_add)
+    elif e['kind'] == 'book':
+        book_add = Media(e)
+        media_list.append(book_add)
+        book_list.append(book_add)
 
+for e in song_samples :
+    song_add = Song(e)
+    song_list.append(song_add)
+
+for e in movie_samples:
+    movie_add = Movie(e)
+    movie_list.append(movie_add)
 
 # [PROBLEM 4] [200 POINTS]
 print("\n***** PROBLEM 4 *****\n")
@@ -269,6 +302,23 @@ print("\n***** PROBLEM 4 *****\n")
 # - id
 # - url (for the itunes url of that thing -- the url to view that track of media on iTunes)
 # - length
+
+label = 'Title, Artist, id, url, length\n'
+
+with open('movies.csv', 'w') as f:
+    f.write(label)
+    for e in movie_list:
+        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
+
+with open('songs.csv', 'w') as f:
+    f.write(label)
+    for e in song_list:
+        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
+
+with open('media.csv', 'w') as f:
+    f.write(label)
+    for e in media_list:
+        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
 
 # There are no provided tests for this problem -- you should check your CSV files to see that they fit this description to see if this problem worked correctly for you. IT IS VERY IMPORTANT THAT YOUR CSV FILES HAVE EXACTLY THOSE NAMES!
 
