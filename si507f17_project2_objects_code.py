@@ -80,8 +80,8 @@ def sample_get_cache_itunes_data(search_term,media_term="all"):
 	if unique_ident in CACHE_DICTION:
 		return CACHE_DICTION[unique_ident]
 	else:
-		x = json.loads(requests.get(baseurl, params=params).text)
-        CACHE_DICTION[unique_ident] = x
+		CACHE_DICTION[unique_ident] = json.loads(requests.get(baseurl, params=params).text)
+
 		full_text = json.dumps(CACHE_DICTION)
 		cache_file_ref = open(CACHE_FNAME,"w")
 		cache_file_ref.write(full_text)
@@ -133,11 +133,11 @@ class Media():
     def __repr__(self):
         return "ITUNES MEDIA: {}".format(self.itunes_id)
 
-    def len (self):
+    def __len__ (self):
         return 0
 
-    def contains (self):
-
+    def __contains__ (self, term):
+        return (term in self.title)
 
 
 
@@ -160,7 +160,30 @@ print("\n***** PROBLEM 2 *****\n")
 # - track_number (the number representing its track number on the album)
 # - genre (the primary genre name from the data iTunes gives you)
 
-# Should have the len method overridden to return the number of seconds in the song. (HINT: The data supplies number of milliseconds in the song... How can you access that data and convert it to seconds?)
+# Should have the len method overridden to return the number of seconds in the song.
+# (HINT: The data supplies number of milliseconds in the song... How can you access that data and convert it to seconds?)
+
+class Song():
+    def __init__(self, media_dict):
+        self.album = media_dict['collectionName']
+        self.track_number = media_dict['trackNumber']
+        self.genre = media_dict['primaryGenreName']
+        self.title = media_dict['trackName']
+        self.author = media_dict['artistName']
+        self.itunes_URL = media_dict['trackViewUrl']
+        self.itunes_id  = media_dict['trackId']
+        self.time = media_dict['trackTimeMillis']
+    def __str__(self):
+        return "{} by {}".format(self.title, self.author)
+
+    def __repr__(self):
+        return "ITUNES MEDIA: {}".format(self.itunes_id)
+
+    def __len__ (self):
+        return int(self.time/1000)
+
+    def __contains__ (self, term):
+        return (term in self.title)
 
 
 
@@ -176,7 +199,31 @@ print("\n***** PROBLEM 2 *****\n")
 
 # Should have an additional method called title_words_num that returns an integer representing the number of words in the movie description. If there is no movie description, this method should return 0.
 
+class Movie():
+    def __init__(self, media_dict):
+        self.title = media_dict['trackName']
+        self.author = media_dict['artistName']
+        self.itunes_URL = media_dict['trackViewUrl']
+        self.itunes_id  = media_dict['trackId']
+        self.rating = media_dict['contentAdvisoryRating']
+        self.genre = media_dict['primaryGenreName']
+        self.time = media_dict['trackTimeMillis']
 
+        try:
+            self.description = media_dict['longDescription']
+        except:
+            self.description = None
+    def __str__(self):
+        return "{} by {}".format(self.title, self.author)
+
+    def __repr__(self):
+        return "ITUNES MEDIA: {}".format(self.itunes_id)
+
+    def __len__ (self):
+        return int(self.time/60000)
+
+    def __contains__ (self, term):
+        return (term in self.title)
 
 # [PROBLEM 3] [150 POINTS]
 print("\n***** PROBLEM 3 *****\n")
