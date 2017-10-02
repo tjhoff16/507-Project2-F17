@@ -269,16 +269,10 @@ movie_list = []
 book_list = []
 
 for e in media_samples:
-    if e['kind'] == 'feature-movie':
-        movie_add = Movie(e)
-        media_list.append(movie_add)
-    elif e['kind'] == 'song':
-        song_add = Song(e)
-        media_list.append(song_add)
-    elif e['kind'] == 'book':
-        book_add = Media(e)
-        media_list.append(book_add)
-        book_list.append(book_add)
+    media_add = Media(e)
+    media_list.append(media_add)
+    if e['kind'] == 'book' :
+        book_list.append(media_add)
 
 for e in song_samples :
     song_add = Song(e)
@@ -303,22 +297,22 @@ print("\n***** PROBLEM 4 *****\n")
 # - url (for the itunes url of that thing -- the url to view that track of media on iTunes)
 # - length
 
-label = 'Title, Artist, id, url, length\n'
+#label = 'Title, Artist, id, url, length\n'
 
-with open('movies.csv', 'w') as f:
-    f.write(label)
-    for e in movie_list:
-        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
+#with open('movies.csv', 'w') as f:
+#    f.write(label)
+#    for e in movie_list:
+#        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
 
-with open('songs.csv', 'w') as f:
-    f.write(label)
-    for e in song_list:
-        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
+#with open('songs.csv', 'w') as f:
+#    f.write(label)
+#    for e in song_list:
+#        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
 
-with open('media.csv', 'w') as f:
-    f.write(label)
-    for e in media_list:
-        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
+#with open('media.csv', 'w') as f:
+#    f.write(label)
+#    for e in media_list:
+#        f.write('{0},{1},{2},{3},{4}\n'.format(e.title, e.author, e.itunes_id, e.itunes_URL, e.time))
 
 # There are no provided tests for this problem -- you should check your CSV files to see that they fit this description to see if this problem worked correctly for you. IT IS VERY IMPORTANT THAT YOUR CSV FILES HAVE EXACTLY THOSE NAMES!
 
